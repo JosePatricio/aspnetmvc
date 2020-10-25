@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="challengedbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'challengedb.dbo.Atencion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Atencion">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="NombreCliente" />
+            <PropertyRef Name="TipoAtencionId" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="NombreCliente" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TipoAtencionId" Type="int" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TipoAtencion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="tipo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Duracion" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Atencion__FechaC__267ABA7A">
+          <End Role="TipoAtencion" Type="Self.TipoAtencion" Multiplicity="1" />
+          <End Role="Atencion" Type="Self.Atencion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoAtencion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Atencion">
+              <PropertyRef Name="TipoAtencionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_insertar_turno" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="varchar" Mode="In" />
+          <Parameter Name="NombreCliente" Type="varchar" Mode="In" />
+          <Parameter Name="CodigoTipoAtencion" Type="varchar" Mode="In" />
+          <Parameter Name="Estado" Type="bit" Mode="InOut" />
+          <Parameter Name="Mensaje" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="sp_obtener_atenciones_en_cola" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CodigoAtencion" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_obtener_tipos_atencion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="challengedbModelStoreContainer">
+          <EntitySet Name="TipoAtencion" EntityType="Self.TipoAtencion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Atencion" EntityType="Self.Atencion" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Atencion].[Id] AS [Id], 
+    [Atencion].[NombreCliente] AS [NombreCliente], 
+    [Atencion].[TipoAtencionId] AS [TipoAtencionId], 
+    [Atencion].[FechaCreacion] AS [FechaCreacion]
+    FROM [dbo].[Atencion] AS [Atencion]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__Atencion__FechaC__267ABA7A" Association="Self.FK__Atencion__FechaC__267ABA7A">
+            <End Role="TipoAtencion" EntitySet="TipoAtencion" />
+            <End Role="Atencion" EntitySet="Atencion" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="challengedbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="TipoAtencion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tipo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Duracion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Atencions" Relationship="Self.FK__Atencion__FechaC__267ABA7A" FromRole="TipoAtencion" ToRole="Atencion" />
+        </EntityType>
+        <EntityType Name="Atencion">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="NombreCliente" />
+            <PropertyRef Name="TipoAtencionId" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreCliente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoAtencionId" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="TipoAtencion" Relationship="Self.FK__Atencion__FechaC__267ABA7A" FromRole="Atencion" ToRole="TipoAtencion" />
+        </EntityType>
+        <Association Name="FK__Atencion__FechaC__267ABA7A">
+          <End Role="TipoAtencion" Type="Self.TipoAtencion" Multiplicity="1" />
+          <End Role="Atencion" Type="Self.Atencion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoAtencion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Atencion">
+              <PropertyRef Name="TipoAtencionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="challengedbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TipoAtencions" EntityType="Self.TipoAtencion" />
+          <EntitySet Name="Atencions" EntityType="Self.Atencion" />
+          <AssociationSet Name="FK__Atencion__FechaC__267ABA7A" Association="Self.FK__Atencion__FechaC__267ABA7A">
+            <End Role="TipoAtencion" EntitySet="TipoAtencions" />
+            <End Role="Atencion" EntitySet="Atencions" />
+          </AssociationSet>
+          <FunctionImport Name="sp_insertar_turno">
+            <Parameter Name="Id" Mode="In" Type="String" />
+            <Parameter Name="NombreCliente" Mode="In" Type="String" />
+            <Parameter Name="CodigoTipoAtencion" Mode="In" Type="String" />
+            <Parameter Name="Estado" Mode="InOut" Type="Boolean" />
+            <Parameter Name="Mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_obtener_atenciones_en_cola" ReturnType="Collection(challengedbModel.sp_obtener_atenciones_en_cola_Result)">
+            <Parameter Name="CodigoAtencion" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_obtener_tipos_atencion" ReturnType="Collection(challengedbModel.sp_obtener_tipos_atencion_Result)" />
+          <FunctionImport Name="spObtenerAtencionesEnCola" EntitySet="Atencions" ReturnType="Collection(challengedbModel.Atencion)">
+            <Parameter Name="CodigoAtencion" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spObtenerTiposAtencion" EntitySet="TipoAtencions" ReturnType="Collection(challengedbModel.TipoAtencion)" />
+          <FunctionImport Name="spInsertarTurno">
+            <Parameter Name="Id" Mode="In" Type="String" />
+            <Parameter Name="NombreCliente" Mode="In" Type="String" />
+            <Parameter Name="CodigoTipoAtencion" Mode="In" Type="String" />
+            <Parameter Name="Estado" Mode="InOut" Type="Boolean" />
+            <Parameter Name="Mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_obtener_atenciones_en_cola_Result">
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="NombreCliente" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="TipoAtencionId" Nullable="false" />
+          <Property Type="DateTime" Name="FechaCreacion" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="sp_obtener_tipos_atencion_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="codigo" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="tipo" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="Duracion" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="challengedbModelStoreContainer" CdmEntityContainer="challengedbEntities">
+          <EntitySetMapping Name="TipoAtencions">
+            <EntityTypeMapping TypeName="challengedbModel.TipoAtencion">
+              <MappingFragment StoreEntitySet="TipoAtencion">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Atencions">
+            <EntityTypeMapping TypeName="challengedbModel.Atencion">
+              <MappingFragment StoreEntitySet="Atencion">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NombreCliente" ColumnName="NombreCliente" />
+                <ScalarProperty Name="TipoAtencionId" ColumnName="TipoAtencionId" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_insertar_turno" FunctionName="challengedbModel.Store.sp_insertar_turno" />
+          <FunctionImportMapping FunctionImportName="sp_obtener_atenciones_en_cola" FunctionName="challengedbModel.Store.sp_obtener_atenciones_en_cola">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="challengedbModel.sp_obtener_atenciones_en_cola_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NombreCliente" ColumnName="NombreCliente" />
+                <ScalarProperty Name="TipoAtencionId" ColumnName="TipoAtencionId" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_obtener_tipos_atencion" FunctionName="challengedbModel.Store.sp_obtener_tipos_atencion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="challengedbModel.sp_obtener_tipos_atencion_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spObtenerAtencionesEnCola" FunctionName="challengedbModel.Store.sp_obtener_atenciones_en_cola" />
+          <FunctionImportMapping FunctionImportName="spObtenerTiposAtencion" FunctionName="challengedbModel.Store.sp_obtener_tipos_atencion" />
+          <FunctionImportMapping FunctionImportName="spInsertarTurno" FunctionName="challengedbModel.Store.sp_insertar_turno" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

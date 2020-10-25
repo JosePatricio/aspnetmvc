@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="challengedbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="TipoAtencion">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="codigo" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="tipo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Duracion" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Atencions" Relationship="Self.FK__Atencion__FechaC__267ABA7A" FromRole="TipoAtencion" ToRole="Atencion" />
+  </EntityType>
+  <EntityType Name="Atencion">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="NombreCliente" />
+      <PropertyRef Name="TipoAtencionId" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="NombreCliente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="TipoAtencionId" Type="Int32" Nullable="false" />
+    <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="TipoAtencion" Relationship="Self.FK__Atencion__FechaC__267ABA7A" FromRole="Atencion" ToRole="TipoAtencion" />
+  </EntityType>
+  <Association Name="FK__Atencion__FechaC__267ABA7A">
+    <End Role="TipoAtencion" Type="Self.TipoAtencion" Multiplicity="1" />
+    <End Role="Atencion" Type="Self.Atencion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoAtencion">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Atencion">
+        <PropertyRef Name="TipoAtencionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="challengedbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TipoAtencions" EntityType="Self.TipoAtencion" />
+    <EntitySet Name="Atencions" EntityType="Self.Atencion" />
+    <AssociationSet Name="FK__Atencion__FechaC__267ABA7A" Association="Self.FK__Atencion__FechaC__267ABA7A">
+      <End Role="TipoAtencion" EntitySet="TipoAtencions" />
+      <End Role="Atencion" EntitySet="Atencions" />
+    </AssociationSet>
+    <FunctionImport Name="sp_insertar_turno">
+      <Parameter Name="Id" Mode="In" Type="String" />
+      <Parameter Name="NombreCliente" Mode="In" Type="String" />
+      <Parameter Name="CodigoTipoAtencion" Mode="In" Type="String" />
+      <Parameter Name="Estado" Mode="InOut" Type="Boolean" />
+      <Parameter Name="Mensaje" Mode="InOut" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_obtener_atenciones_en_cola" ReturnType="Collection(challengedbModel.sp_obtener_atenciones_en_cola_Result)">
+      <Parameter Name="CodigoAtencion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_obtener_tipos_atencion" ReturnType="Collection(challengedbModel.sp_obtener_tipos_atencion_Result)" />
+    <FunctionImport Name="spObtenerAtencionesEnCola" EntitySet="Atencions" ReturnType="Collection(challengedbModel.Atencion)">
+      <Parameter Name="CodigoAtencion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="spObtenerTiposAtencion" EntitySet="TipoAtencions" ReturnType="Collection(challengedbModel.TipoAtencion)" />
+    <FunctionImport Name="spInsertarTurno">
+      <Parameter Name="Id" Mode="In" Type="String" />
+      <Parameter Name="NombreCliente" Mode="In" Type="String" />
+      <Parameter Name="CodigoTipoAtencion" Mode="In" Type="String" />
+      <Parameter Name="Estado" Mode="InOut" Type="Boolean" />
+      <Parameter Name="Mensaje" Mode="InOut" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="sp_obtener_atenciones_en_cola_Result">
+    <Property Type="String" Name="Id" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="NombreCliente" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="TipoAtencionId" Nullable="false" />
+    <Property Type="DateTime" Name="FechaCreacion" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="sp_obtener_tipos_atencion_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="codigo" Nullable="false" MaxLength="8" />
+    <Property Type="String" Name="tipo" Nullable="false" MaxLength="10" />
+    <Property Type="Int32" Name="Duracion" Nullable="false" />
+  </ComplexType>
+</Schema>

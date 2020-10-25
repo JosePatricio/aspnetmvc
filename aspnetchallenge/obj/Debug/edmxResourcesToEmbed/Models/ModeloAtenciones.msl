@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="challengedbModelStoreContainer" CdmEntityContainer="challengedbEntities">
+    <EntitySetMapping Name="TipoAtencions">
+      <EntityTypeMapping TypeName="challengedbModel.TipoAtencion">
+        <MappingFragment StoreEntitySet="TipoAtencion">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="tipo" ColumnName="tipo" />
+          <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Atencions">
+      <EntityTypeMapping TypeName="challengedbModel.Atencion">
+        <MappingFragment StoreEntitySet="Atencion">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NombreCliente" ColumnName="NombreCliente" />
+          <ScalarProperty Name="TipoAtencionId" ColumnName="TipoAtencionId" />
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_insertar_turno" FunctionName="challengedbModel.Store.sp_insertar_turno" />
+    <FunctionImportMapping FunctionImportName="sp_obtener_atenciones_en_cola" FunctionName="challengedbModel.Store.sp_obtener_atenciones_en_cola">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="challengedbModel.sp_obtener_atenciones_en_cola_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NombreCliente" ColumnName="NombreCliente" />
+          <ScalarProperty Name="TipoAtencionId" ColumnName="TipoAtencionId" />
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_obtener_tipos_atencion" FunctionName="challengedbModel.Store.sp_obtener_tipos_atencion">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="challengedbModel.sp_obtener_tipos_atencion_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="tipo" ColumnName="tipo" />
+          <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="spObtenerAtencionesEnCola" FunctionName="challengedbModel.Store.sp_obtener_atenciones_en_cola" />
+    <FunctionImportMapping FunctionImportName="spObtenerTiposAtencion" FunctionName="challengedbModel.Store.sp_obtener_tipos_atencion" />
+    <FunctionImportMapping FunctionImportName="spInsertarTurno" FunctionName="challengedbModel.Store.sp_insertar_turno" />
+  </EntityContainerMapping>
+</Mapping>

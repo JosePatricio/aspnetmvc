@@ -1,0 +1,291 @@
+﻿@model IEnumerable<aspnetchallenge.Models.Atencion>
+
+@{
+    Layout = null;
+    WebGrid webGrid = new WebGrid(source: Model, canPage: true, canSort: false);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .Grid {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+
+            .Grid th {
+                background-color: #F7F7F7;
+                font-weight: bold;
+            }
+
+            .Grid th, .Grid td {
+                padding: 5px;
+                width: 150px;
+                border: 1px solid #ccc;
+            }
+
+            .Grid, .Grid table td {
+                border: 0px solid #ccc;
+            }
+
+                .Grid th a, .Grid th a:visited {
+                    color: #333;
+                }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            align-items: center;
+            align-self: center;
+            align-content: center;
+            text-align: center;
+        }
+
+        .inputColumn {
+            float: left;
+            width: 150px;
+            padding: 10px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .centered {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+
+   
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+   
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+    <div class="centered">
+
+        <div class="row">
+            <div class="inputColumn">
+                Id:<br />
+                <input type="text" id="txtId" class="form-control" style="width:140px" />
+            </div>
+            <div class="inputColumn">
+                Usuario:<br />
+                <input type="text" id="txtUsuario" class="form-control" style="width:140px" />
+            </div>
+            <div class="inputColumn">
+                Cola:<br />
+                <select id="TipoId"
+                        class="form-control"
+                        asp-items="@(new SelectList(Enumerable.Empty<SelectListItem>(),"Value", "Text"))">
+                </select>
+            </div>
+            <div class="inputColumn">
+                <br />
+                <input type="button" id="btnAdd" value="Registrar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+    <br />
+
+
+    <div class="row">
+        <div class="column">
+            <h2>Cola 1 (2 min)</h2>
+            <div class="centered">
+
+
+                @webGrid.GetHtml(
+                   htmlAttributes: new { @id = "WebGrid1", @class = "Grid" },
+                   columns: webGrid.Columns(
+                            webGrid.Column(header: "ID", format: @<span class="label">@item.Id</span>),
+webGrid.Column(header: "USUARIO", format: @<span class="label">@item.NombreCliente</span>)))
+
+            </div>
+        </div>
+        <div class="column">
+            <h2>Cola 2 (3 min)</h2>
+            <div class="centered">
+                @webGrid.GetHtml(
+                   htmlAttributes: new { @id = "WebGrid2", @class = "Grid" },
+                   columns: webGrid.Columns(
+                            webGrid.Column(header: "ID", format: @<span class="label">@item.Id</span>),
+webGrid.Column(header: "USUARIO", format: @<span class="label">@item.NombreCliente</span>)))
+            </div>
+        </div>
+    </div>
+
+
+
+    <br />
+
+
+
+
+    <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+
+    
+    <script type="text/javascript">
+
+
+        function llenarTabla(idTabla, datos) {
+            var model = datos;
+
+            var row = $("#" + idTabla + " tbody tr:last-child").clone(true);
+            $("#" + idTabla + " tbody tr").remove();
+            $.each(model, function () {
+
+                var customer = this;
+                $("td", row).eq(0).html(customer.Id);
+                $("td", row).eq(1).html(customer.NombreCliente);
+
+                $("#" + idTabla + "").append(row);
+                row = $("#" + idTabla + " tbody tr:last-child").clone(true);
+            });
+
+        }
+
+
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/Index',
+                type: "GET",
+                success: function (response) {
+                    if (response.data) {
+                        const data = JSON.parse(response.data);
+                        llenarTabla("WebGrid1", data);
+                    }
+
+
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+
+
+            $.ajax({
+                url: '/Home/Cola2',
+                type: "GET",
+                success: function (response) {
+                    if (response.data) {
+                        const data = JSON.parse(response.data);
+                        llenarTabla("WebGrid2", data);
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+
+            $.ajax({
+                url: '/Home/TiposAtencion',
+                type: "GET",
+                success: function (response) {
+                    var data = JSON.parse(response.data);
+                    $.each(data, function () {
+                        $("#TipoId").append($("<option></option>").val(this['codigo']).html(this['tipo']));
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        })
+
+        $("body").on("click", "#btnAdd", function () {
+            var txtId = $("#txtId").val();
+            var txtIdTipo = $("#TipoId").val();
+            var txtUsuario = $("#txtUsuario").val();
+            var txttipo = $("#TipoId option:selected").text();
+
+            if (!txtId) {
+                $('#idTxtModalMsg').text('Ingrese Id');
+                $('#myModal').modal('show');
+                return;
+            }
+            if (!txtUsuario) {
+                $('#idTxtModalMsg').text('Ingrese Usuario');
+                $('#myModal').modal('show');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/Insertar",
+                data: '{Id:"' + txtId + '",NombreCliente: "' + txtUsuario + '", CodigoTipo: "' + txtIdTipo + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    const data = JSON.parse(r.data);
+
+                    if (r.Estado) {
+                        if (txttipo == 'Cola 1') {
+                            llenarTabla("WebGrid1", data);
+                        }
+
+                        if (txttipo == 'Cola 2') {
+                            llenarTabla("WebGrid2", data);
+                        }
+             
+                    } else {
+                        $('#myModal').modal('show');
+                    }
+
+                    $('#idTxtModalMsg').text(r.Mensaje);
+                    $('#myModal').modal('show');
+                }
+            });
+        });
+
+    </script>
+
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   
+                    <div id="idTxtModalMsg" class="alert alert-warning" role="alert">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

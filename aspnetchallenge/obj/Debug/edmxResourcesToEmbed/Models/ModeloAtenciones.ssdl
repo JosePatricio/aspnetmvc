@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="challengedbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'challengedb.dbo.Atencion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Atencion">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="NombreCliente" />
+      <PropertyRef Name="TipoAtencionId" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="NombreCliente" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="TipoAtencionId" Type="int" Nullable="false" />
+    <Property Name="FechaCreacion" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TipoAtencion">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="codigo" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="tipo" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Duracion" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Atencion__FechaC__267ABA7A">
+    <End Role="TipoAtencion" Type="Self.TipoAtencion" Multiplicity="1" />
+    <End Role="Atencion" Type="Self.Atencion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoAtencion">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Atencion">
+        <PropertyRef Name="TipoAtencionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="sp_insertar_turno" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="varchar" Mode="In" />
+    <Parameter Name="NombreCliente" Type="varchar" Mode="In" />
+    <Parameter Name="CodigoTipoAtencion" Type="varchar" Mode="In" />
+    <Parameter Name="Estado" Type="bit" Mode="InOut" />
+    <Parameter Name="Mensaje" Type="varchar" Mode="InOut" />
+  </Function>
+  <Function Name="sp_obtener_atenciones_en_cola" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CodigoAtencion" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_obtener_tipos_atencion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="challengedbModelStoreContainer">
+    <EntitySet Name="TipoAtencion" EntityType="Self.TipoAtencion" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Atencion" EntityType="Self.Atencion" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Atencion].[Id] AS [Id], 
+    [Atencion].[NombreCliente] AS [NombreCliente], 
+    [Atencion].[TipoAtencionId] AS [TipoAtencionId], 
+    [Atencion].[FechaCreacion] AS [FechaCreacion]
+    FROM [dbo].[Atencion] AS [Atencion]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__Atencion__FechaC__267ABA7A" Association="Self.FK__Atencion__FechaC__267ABA7A">
+      <End Role="TipoAtencion" EntitySet="TipoAtencion" />
+      <End Role="Atencion" EntitySet="Atencion" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
